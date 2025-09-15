@@ -2,8 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { LoaderPinwheel } from 'lucide-react'
 import { Link } from 'react-router'
-import { useMutation , useQueryClient } from '@tanstack/react-query'
-import { signup } from '../lib/api'
+import { useSignup } from '../hooks/useAuth.js'
 const SignUp = () => {
 
   const [signUpData, setSignUpData] = useState({
@@ -12,16 +11,13 @@ const SignUp = () => {
     password: "",
   })
 
-  const queryClient = useQueryClient();
+  const {isPending,error,signupMutation} = useSignup();
 
-  const {mutate:signupmutation,isPending,error} = useMutation({
-    mutationFn: signup,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["authUser"] }),
-  })
+  
 
   const handleSignup = (e) =>{
     e.preventDefault();
-    signupmutation(signUpData);
+    signupMutation(signUpData);
   }
   return (
     <div className='h-screen flex items-center justify-center p-4 sm:p-6 md:p-8' data-theme="forest">

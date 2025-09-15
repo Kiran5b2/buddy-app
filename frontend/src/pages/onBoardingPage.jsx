@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import useAuthUser from '../hooks/useAuthUser.js';
 import { completeOnboarding } from '../lib/api.js';
-import { CameraIcon,ShuffleIcon,MapPinIcon,ShipWheelIcon,Loader2Icon} from 'lucide-react';
+import { CameraIcon,ShuffleIcon,ShipWheelIcon,Loader2Icon} from 'lucide-react';
+import { MapPinIcon } from 'lucide-react';
 import { LANGUAGES } from '../constants/index.js';
 
 
@@ -40,7 +41,7 @@ const OnBoardingPage = () => {
   };
 
   const handleRandomAvatar = () => {
-    const idx = Math.floor(Math.random() * 100) + 1; // 1-100 included
+    const idx = Math.floor(Math.random() * 100) + 1;
     const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
 
     setFormState({ ...formState, profilePic: randomAvatar });
