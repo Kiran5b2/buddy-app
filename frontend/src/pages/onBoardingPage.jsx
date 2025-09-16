@@ -1,23 +1,20 @@
-import React from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query'; 
-import { useState } from 'react';
-import { toast } from 'react-hot-toast';
-import useAuthUser from '../hooks/useAuthUser.js';
-import { completeOnboarding } from '../lib/api.js';
-import { CameraIcon,ShuffleIcon,ShipWheelIcon,Loader2Icon} from 'lucide-react';
-import { MapPinIcon } from 'lucide-react';
-import { LANGUAGES } from '../constants/index.js';
+import { useState } from "react";
+import useAuthUser from "../hooks/useAuthUser";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { completeOnboarding } from "../lib/api";
+import { LoaderIcon, MapPinIcon, ShipWheelIcon, ShuffleIcon } from "lucide-react";
+import { LANGUAGES } from "../constants";
 
-
-
-const OnBoardingPage = () => {
+const OnboardingPage = () => {
   const { authUser } = useAuthUser();
   const queryClient = useQueryClient();
 
   const [formState, setFormState] = useState({
-    fullname: authUser?.fullname || "",
+    fullName: authUser?.fullName || "",
     bio: authUser?.bio || "",
-    nativelanguage: authUser?.nativelanguage || "", 
+    nativeLanguage: authUser?.nativeLanguage || "",
+    learningLanguage: authUser?.learningLanguage || "",
     location: authUser?.location || "",
     profilePic: authUser?.profilePic || "",
   });
@@ -25,40 +22,39 @@ const OnBoardingPage = () => {
   const { mutate: onboardingMutation, isPending } = useMutation({
     mutationFn: completeOnboarding,
     onSuccess: () => {
-      toast.success("Profile OnBoarded successfully!");
+      toast.success("Profile onboarded successfully");
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
     },
 
     onError: (error) => {
-      toast.error(error?.response?.data?.message || "Onboarding failed. Please try again.");
-    }
-
+      toast.error(error.response.data.message);
+    },
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     onboardingMutation(formState);
   };
 
   const handleRandomAvatar = () => {
-    const idx = Math.floor(Math.random() * 100) + 1;
+    const idx = Math.floor(Math.random() * 100) + 1; // 1-100 included
     const randomAvatar = `https://avatar.iran.liara.run/public/${idx}.png`;
 
     setFormState({ ...formState, profilePic: randomAvatar });
     toast.success("Random profile picture generated!");
   };
-  return (
-    <div className='min-h-screen bg-base-100 flex items-center justify-center p-4'>
-      <div className='card bg-base-200 w-full max-w-3xl shadow-xl'>
-        <div className='card-body p-6 sm:p-8'>
-          <h1 className='text-2xl sm:text-3xl font-bold text-center mb-6'>
-            Complete Your Profile
-          </h1>
 
-          <form onSubmit={handleSubmit} className='space-y-6'>
-            {/* Profile picture */}
-            <div className='flex flex-col items-center justify-center space-y-4'>
-              {/* Image preview */}
+  return (
+    <div className="min-h-screen bg-base-100 flex items-center justify-center p-4">
+      <div className="card bg-base-200 w-full max-w-3xl shadow-xl">
+        <div className="card-body p-6 sm:p-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6">Complete Your Profile</h1>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* PROFILE PIC CONTAINER */}
+            <div className="flex flex-col items-center justify-center space-y-4">
+              {/* IMAGE PREVIEW */}
               <div className="size-32 rounded-full bg-base-300 overflow-hidden">
                 {formState.profilePic ? (
                   <img
@@ -80,9 +76,9 @@ const OnBoardingPage = () => {
                   Generate Random Avatar
                 </button>
               </div>
-            
             </div>
-              {/* FULL NAME */}
+
+            {/* FULL NAME */}
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Full Name</span>
@@ -98,18 +94,18 @@ const OnBoardingPage = () => {
             </div>
 
             {/* BIO */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text">Bio</span>
-                </label>
-                <textarea
-                  name="bio"
-                  value={formState.bio}
-                  onChange={(e) => setFormState({ ...formState, bio: e.target.value })}
-                  className="textarea textarea-bordered w-full h-24"  // 🔥 added w-full
-                  placeholder="Tell others about yourself and your language learning goals"
-                />
-              </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Bio</span>
+              </label>
+              <textarea
+                name="bio"
+                value={formState.bio}
+                onChange={(e) => setFormState({ ...formState, bio: e.target.value })}
+                className="textarea textarea-bordered h-24"
+                placeholder="Tell others about yourself and your language learning goals"
+              />
+            </div>
 
             {/* LANGUAGES */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -120,8 +116,8 @@ const OnBoardingPage = () => {
                 </label>
                 <select
                   name="nativeLanguage"
-                  value={formState.nativelanguage}
-                  onChange={(e) => setFormState({ ...formState, nativelanguage: e.target.value })}
+                  value={formState.nativeLanguage}
+                  onChange={(e) => setFormState({ ...formState, nativeLanguage: e.target.value })}
                   className="select select-bordered w-full"
                 >
                   <option value="">Select your native language</option>
@@ -132,7 +128,27 @@ const OnBoardingPage = () => {
                   ))}
                 </select>
               </div>
+
+              {/* LEARNING LANGUAGE */}
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Learning Language</span>
+                </label>
+                <select
+                  name="learningLanguage"
+                  value={formState.learningLanguage}
+                  onChange={(e) => setFormState({ ...formState, learningLanguage: e.target.value })}
+                  className="select select-bordered w-full"
+                >
+                  <option value="">Select language you're learning</option>
+                  {LANGUAGES.map((lang) => (
+                    <option key={`learning-${lang}`} value={lang.toLowerCase()}>
+                      {lang}
+                    </option>
+                  ))}
+                </select>
               </div>
+            </div>
 
             {/* LOCATION */}
             <div className="form-control">
@@ -162,17 +178,15 @@ const OnBoardingPage = () => {
                 </>
               ) : (
                 <>
-                  <Loader2Icon className="animate-spin size-5 mr-2" />
+                  <LoaderIcon className="animate-spin size-5 mr-2" />
                   Onboarding...
                 </>
               )}
             </button>
-
           </form>
         </div>
       </div>
     </div>
   );
 };
-
-export default OnBoardingPage;
+export default OnboardingPage;
