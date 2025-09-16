@@ -170,6 +170,8 @@ export const LANGUAGES = [
   "Mandarin",
   "Japanese",
   "Korean",
+  "Telugu",
+  "Tamil",
   "Hindi",
   "Russian",
   "Portuguese",
@@ -187,6 +189,8 @@ export const LANGUAGE_TO_FLAG = {
   mandarin: "cn",
   japanese: "jp",
   korean: "kr",
+  telugu:"in",
+  tamil:"in",
   hindi: "in",
   russian: "ru",
   portuguese: "pt",
@@ -194,4 +198,5 @@ export const LANGUAGE_TO_FLAG = {
   italian: "it",
   turkish: "tr",
   dutch: "nl",
+
 };
