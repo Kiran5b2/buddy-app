@@ -24,19 +24,27 @@ const HomePage = () => {
   });
 
   const { data: recommendedUsers = [], isLoading: loadingUsers } = useQuery({
-    queryKey: ["users"],
-    queryFn: getRecommendedUsers,
-  });
+  queryKey: ["users"],
+  queryFn: getRecommendedUsers,
+  select: (data) => data.users || [],  // ✅ extract only the array
+});
+
 
   const { data: outgoingFriendReqs } = useQuery({
     queryKey: ["outgoingFriendReqs"],
     queryFn: getOutgoingFriendReqs,
   });
+const { mutate: sendRequestMutation, isPending } = useMutation({
+  mutationFn: sendFriendRequest,
+  onSuccess: (data, userId) => {
+    // Optimistically mark as sent
+    setOutgoingRequestsIds((prev) => new Set([...prev, userId]));
 
-  const { mutate: sendRequestMutation, isPending } = useMutation({
-    mutationFn: sendFriendRequest,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] }),
-  });
+    // Still refetch to stay in sync with backend
+    queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] });
+  },
+});
+
 
   useEffect(() => {
     const outgoingIds = new Set();
@@ -109,11 +117,11 @@ const HomePage = () => {
                     <div className="card-body p-5 space-y-4">
                       <div className="flex items-center gap-3">
                         <div className="avatar size-16 rounded-full">
-                          <img src={user.profilePic} alt={user.fullName} />
+                          <img src={user.profilePic} alt={user.fullname} />
                         </div>
 
                         <div>
-                          <h3 className="font-semibold text-lg">{user.fullName}</h3>
+                          <h3 className="font-semibold text-lg">{user.fullname}</h3>
                           {user.location && (
                             <div className="flex items-center text-xs opacity-70 mt-1">
                               <MapPinIcon className="size-3 mr-1" />
@@ -126,12 +134,8 @@ const HomePage = () => {
                       {/* Languages with flags */}
                       <div className="flex flex-wrap gap-1.5">
                         <span className="badge badge-secondary">
-                          {getLanguageFlag(user.nativeLanguage)}
-                          Native: {capitialize(user.nativeLanguage)}
-                        </span>
-                        <span className="badge badge-outline">
-                          {getLanguageFlag(user.learningLanguage)}
-                          Learning: {capitialize(user.learningLanguage)}
+                          {getLanguageFlag(user.nativelanguage)}
+                          Native: {capitialize(user.nativelanguage)}
                         </span>
                       </div>
 

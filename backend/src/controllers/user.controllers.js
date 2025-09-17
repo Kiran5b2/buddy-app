@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import FriendRequest from "../models/friendrequest.model.js";
+import FriendRequest from "../models/friendRequest.model.js";
 
 export async function getRecommendedUsers(req, res) {
     try {
@@ -34,6 +34,7 @@ export async function getMyFriends(req, res) {
 }
 
 export async function sendFriendRequest(req, res) {
+    
     try {
         const myId = req.user.id;
         const {id:recipientId} = req.params;
@@ -63,7 +64,7 @@ export async function sendFriendRequest(req, res) {
             sender: myId,
             recipient: recipientId
         });
-        res.status(200).json({ success: true, message: "Friend request sent successfully.", friendRequest });
+        res.status(200).json({ success: true, message: "Friend request sent successfully.", friendRequest , recipientId, });
     } catch (error) {
         console.log("Error in sendFriendRequest:", error.message);
         res.status(500).json({ success: false, message: "Internal server error" });
@@ -107,7 +108,7 @@ export async function getFriendRequests(req, res) {
 
 export async function outgoingFriendRequests(req, res) {
     try {
-        const outgoingRequests = await FriendRequest.find({sender:req.user.id, status:"pending"}).populate("recipient","fullname profilepic  ");
+        const outgoingRequests = await FriendRequest.find({sender:req.user.id, status:"pending"}).populate("recipient","fullname profilePic  ");
         res.status(200).json({success:true, outgoingRequests});
     } catch (error) {
         console.log("Error in outgoingFriendRequests:", error.message);
