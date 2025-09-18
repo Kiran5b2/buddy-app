@@ -1,7 +1,9 @@
 import { Link } from "react-router";
-import { LANGUAGE_TO_FLAG } from "../constants";
+import { LANGUAGE_TO_FLAG } from "../constants/index.js";
 
 const FriendCard = ({ friend }) => {
+  console.log(friend.fullname)
+  console.log(friend.nativelanguage)
   return (
     <div className="card bg-base-200 hover:shadow-md transition-shadow">
       <div className="card-body p-4">
@@ -15,9 +17,10 @@ const FriendCard = ({ friend }) => {
 
         <div className="flex flex-wrap gap-1.5 mb-3">
           <span className="badge badge-secondary text-xs">
-            {getLanguageFlag(friend.nativelanguage)}
+            {getLanguageFlag(friend.nativelanguage)} 
             Native: {friend.nativelanguage}
           </span>
+          
         </div>
 
         <Link to={`/chat/${friend._id}`} className="btn btn-outline w-full">

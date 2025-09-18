@@ -5,14 +5,14 @@ import {
   getRecommendedUsers,
   getUserFriends,
   sendFriendRequest,
-} from "../lib/api";
+} from "../lib/api.js";
 import { Link } from "react-router";
 import { CheckCircleIcon, MapPinIcon, UserPlusIcon, UsersIcon } from "lucide-react";
 
-import { capitialize } from "../lib/utils";
+import { capitialize } from "../lib/utils.js";
 
-import FriendCard, { getLanguageFlag } from "../components/FriendCard";
-import NoFriendsFound from "../components/NoFriendsFound";
+import FriendCard, { getLanguageFlag } from "../components/FriendCard.jsx";
+import NoFriendsFound from "../components/NoFriendsFound.jsx";
 
 const HomePage = () => {
   const queryClient = useQueryClient();
@@ -36,13 +36,7 @@ const HomePage = () => {
   });
 const { mutate: sendRequestMutation, isPending } = useMutation({
   mutationFn: sendFriendRequest,
-  onSuccess: (data, userId) => {
-    // Optimistically mark as sent
-    setOutgoingRequestsIds((prev) => new Set([...prev, userId]));
-
-    // Still refetch to stay in sync with backend
-    queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] });
-  },
+  onSuccess: () => queryClient.invalidateQueries({ queryKey: ["outgoingFriendReqs"] }),
 });
 
 

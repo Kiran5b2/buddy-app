@@ -45,20 +45,10 @@ export async function getOutgoingFriendReqs() {
 }
 
 export async function sendFriendRequest(userid) {
-  try {
-    const response = await axiosInstance.post(`/users/friend-request/${userid}`);
+  const response = await axiosInstance.post(`/users/friend-request/${userid}`);
     return response.data;
-  } catch (error) {
-    if (error.response) {
-      console.error("❌ Friend request failed:", error.response.data.message); // log backend message
-    } else {
-      console.error("❌ Unexpected error:", error.message);
-    }
-    throw error;
-  }
+
 }
-
-
 export async function getFriendRequests() {
   const response = await axiosInstance.get("/users/friend-requests");
   return response.data;

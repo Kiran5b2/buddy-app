@@ -24,7 +24,7 @@ export async function getMyFriends(req, res) {
   try {
     const user = await User.findById(req.user.id)
       .select("friends")
-      .populate("friends", "fullName profilePic nativelanguage");
+      .populate("friends", "fullname profilePic nativelanguage");
 
     res.status(200).json(user.friends);
   } catch (error) {
@@ -97,9 +97,10 @@ export async function acceptFriendRequest(req, res) {
 
 export async function getFriendRequests(req, res) {
     try {
-        const incomingRequests = await FriendRequest.find({recipient:req.user.id, status:"pending"}).populate("sender","fullname profilepic  ");
-        
-        res.status(200).json({success:true, incomingRequests});
+        const incomingRequests = await FriendRequest.find({recipient:req.user.id, status:"pending"}).populate("sender","fullname profilepic nativelanguage");
+        const acceptedRequests = await FriendRequest.find({recipient:req.user.id, status:"accepted"}).populate("recipient","fullname profilepic nativelanguage");
+        res.status(200).json({success:true, incomingRequests , acceptedRequests});
+
     } catch (error) {
         console.log("Error in getFriendRequests:", error.message);
         res.status(500).json({ success: false, message: "Internal server error" });
