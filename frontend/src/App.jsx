@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Routes, Navigate } from 'react-router'
+import { Route, Routes, Navigate } from 'react-router-dom'
 import HomePage from './pages/HomePage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import SignUp from './pages/signUp.jsx'
