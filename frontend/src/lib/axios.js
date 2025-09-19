@@ -1,6 +1,6 @@
 import axios from 'axios';
 
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:5001/api', // Replace with your backend API base URL
+  baseURL: 'https://buddy-app-1.onrender.com/api', // Updated to deployed backend
   withCredentials: true, // Include cookies in requests
 });
